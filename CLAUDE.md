@@ -21,7 +21,7 @@ O Claude tem **liberdade total** para:
 | URL base | `https://seedtech-n8n.sayq8r.easypanel.host` |
 | MCP SSE URL | `https://seedtech-n8n.sayq8r.easypanel.host/mcp/sse` |
 | Hospedagem | VPS via EasyPanel |
-| API Key | `[PREENCHER: Settings → API → Create an API Key]` |
+| API Key | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTNjYzM1NS00ZjkxLTQ1OGYtOGViNC01MmFhODY4YzQwZTMiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiOTQzOGFmNjMtMDM3Ni00ZmQwLWE5OTgtZmZkOTMxNjM0Zjg4IiwiaWF0IjoxNzc2MTg0NDc0fQ.zKDuvrFT7gFGcspMgGhjil7-gyQsPBUz9XvPC5SqTeQ` |
 
 ### Ativar o MCP (fazer uma única vez)
 1. Settings → MCP → ativar toggle "Instance-level MCP"
