@@ -19,6 +19,30 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- ============================================================
+-- FUNÇÃO: calcula process_after = last_message_at + 20s
+-- Usada na tabela pending_messages
+-- ============================================================
+CREATE OR REPLACE FUNCTION set_process_after()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.process_after = NEW.last_message_at + INTERVAL '20 seconds';
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
+-- FUNÇÃO: calcula ends_at = scheduled_at + duration_min
+-- Usada na tabela appointments
+-- ============================================================
+CREATE OR REPLACE FUNCTION set_ends_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.ends_at = NEW.scheduled_at + (NEW.duration_min * INTERVAL '1 minute');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
 -- TABELA: clients
 -- Clientes contratantes do sistema (multi-tenant root)
 -- ============================================================
@@ -241,8 +265,7 @@ CREATE TABLE IF NOT EXISTS pending_messages (
   -- Controle de tempo
   first_message_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),           -- Quando chegou a 1ª mensagem
   last_message_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),           -- Última atualização do buffer
-  process_after    TIMESTAMPTZ NOT NULL                           -- Processar após este momento (last + 20s)
-    GENERATED ALWAYS AS (last_message_at + INTERVAL '20 seconds') STORED,
+  process_after    TIMESTAMPTZ NOT NULL DEFAULT NOW() + INTERVAL '20 seconds', -- Calculado via trigger: last + 20s
 
   -- Status do processamento
   status          TEXT        NOT NULL DEFAULT 'pending'
@@ -257,12 +280,16 @@ CREATE TABLE IF NOT EXISTS pending_messages (
 
   -- Só pode haver UMA entrada pendente por contato por vez
   UNIQUE (client_id, contact_id, status)
-    DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TRIGGER trg_pending_messages_updated_at
   BEFORE UPDATE ON pending_messages
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Trigger: recalcula process_after sempre que last_message_at mudar
+CREATE TRIGGER trg_pending_process_after
+  BEFORE INSERT OR UPDATE OF last_message_at ON pending_messages
+  FOR EACH ROW EXECUTE FUNCTION set_process_after();
 
 -- Índices
 CREATE INDEX IF NOT EXISTS idx_pending_client_id      ON pending_messages (client_id);
@@ -304,8 +331,7 @@ CREATE TABLE IF NOT EXISTS appointments (
   -- Tempo
   scheduled_at    TIMESTAMPTZ NOT NULL,                          -- Data e hora do agendamento
   duration_min    INTEGER     NOT NULL DEFAULT 60,               -- Duração em minutos
-  ends_at         TIMESTAMPTZ                                    -- Calculado: scheduled_at + duration
-    GENERATED ALWAYS AS (scheduled_at + (duration_min * INTERVAL '1 minute')) STORED,
+  ends_at         TIMESTAMPTZ,                                   -- Calculado via trigger: scheduled_at + duration_min
   timezone        TEXT        NOT NULL DEFAULT 'America/Sao_Paulo',
 
   -- Status
@@ -342,6 +368,11 @@ CREATE TABLE IF NOT EXISTS appointments (
 CREATE TRIGGER trg_appointments_updated_at
   BEFORE UPDATE ON appointments
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Trigger: recalcula ends_at sempre que scheduled_at ou duration_min mudar
+CREATE TRIGGER trg_appointments_ends_at
+  BEFORE INSERT OR UPDATE OF scheduled_at, duration_min ON appointments
+  FOR EACH ROW EXECUTE FUNCTION set_ends_at();
 
 -- Índices
 CREATE INDEX IF NOT EXISTS idx_appt_client_id       ON appointments (client_id);
