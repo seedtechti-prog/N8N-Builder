@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(git --version)",
-      "Bash(where winget:*)"
+      "Bash(where winget:*)",
+      "Bash(curl -s -H 'X-N8N-API-KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTNjYzM1NS00ZjkxLTQ1OGYtOGViNC01MmFhODY4YzQwZTMiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiOTQzOGFmNjMtMDM3Ni00ZmQwLWE5OTgtZmZkOTMxNjM0Zjg4IiwiaWF0IjoxNzc2MTg0NDc0fQ.zKDuvrFT7gFGcspMgGhjil7-gyQsPBUz9XvPC5SqTeQ' https://seedtech-n8n.sayq8r.easypanel.host/api/v1/credentials)",
+      "Bash(python3 -c ':*)",
+      "Bash(node -e ':*)",
+      "Bash(node scripts/create-workflows.mjs)",
+      "Bash(curl -s -X POST -H 'X-N8N-API-KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTNjYzM1NS00ZjkxLTQ1OGYtOGViNC01MmFhODY4YzQwZTMiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiOTQzOGFmNjMtMDM3Ni00ZmQwLWE5OTgtZmZkOTMxNjM0Zjg4IiwiaWF0IjoxNzc2MTg0NDc0fQ.zKDuvrFT7gFGcspMgGhjil7-gyQsPBUz9XvPC5SqTeQ' https://seedtech-n8n.sayq8r.easypanel.host/api/v1/workflows/2Oq8mjo7WRSrJMqr/activate)",
+      "Bash(curl -s -X POST -H 'X-N8N-API-KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTNjYzM1NS00ZjkxLTQ1OGYtOGViNC01MmFhODY4YzQwZTMiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiOTQzOGFmNjMtMDM3Ni00ZmQwLWE5OTgtZmZkOTMxNjM0Zjg4IiwiaWF0IjoxNzc2MTg0NDc0fQ.zKDuvrFT7gFGcspMgGhjil7-gyQsPBUz9XvPC5SqTeQ' https://seedtech-n8n.sayq8r.easypanel.host/api/v1/workflows/xPs7DXB3rhYFkb6w/activate)"
     ]
   }
 }
